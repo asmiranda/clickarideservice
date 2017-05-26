@@ -4,7 +4,12 @@ import com.iamwiser.clickarideservice.domain.Passenger;
 import com.iamwiser.clickarideservice.dto.RequestRiderDTO;
 import com.iamwiser.clickarideservice.dto.UserDTO;
 import com.iamwiser.clickarideservice.service.ClickARideService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,17 +27,26 @@ public class PassengerController {
             produces = { "application/json" },
             consumes = { "application/json" },
             method = RequestMethod.POST)
-    public RequestRiderDTO requestRider(@RequestBody RequestRiderDTO dto) {
+    public ResponseEntity<RequestRiderDTO> requestRider(@RequestBody RequestRiderDTO dto) {
         RequestRiderDTO retDTO = service.requestRider(dto);
-        return retDTO;
+        return new ResponseEntity<>(retDTO, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/registerPassenger",
             produces = { "application/json" },
             consumes = { "application/json" },
             method = RequestMethod.POST)
-    public String registerPassenger(@RequestBody UserDTO user) {
+    public ResponseEntity<String> registerPassenger(@RequestBody UserDTO user) {
         String ret = service.registerPassenger(user);
-        return ret;
+        return new ResponseEntity<>(ret, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/cancelRequestRider",
+            produces = { "application/json" },
+            consumes = { "application/json" },
+            method = RequestMethod.POST)
+    public ResponseEntity<String> cancelRequestRider(@RequestBody RequestRiderDTO dto) {
+        String ret = service.cancelRequestRider(dto);
+        return new ResponseEntity<>(ret, HttpStatus.OK);
     }
 }

@@ -10,13 +10,13 @@ import javax.persistence.*;
 @Entity
 @Table(name="person")
 @Inheritance(strategy= InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "PERSON_TYPE")
+@DiscriminatorColumn(name = "persontype")
 public @Data abstract class Person {
     @Id
     @GeneratedValue
     private Long id;
-    private String userName;
+    private String username;
     private String password;
-    private String firstName;
-    private String lastName;
+    private String firstname;
+    private String lastname;
 }

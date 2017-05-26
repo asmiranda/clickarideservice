@@ -18,11 +18,11 @@ public @Data class RideRequest {
     @GeneratedValue
     private Long id;
 
-    private Date dateRequest;
-    private Time timeRequest;
+    private Date daterequest;
+    private Time timerequest;
 
-    private String locationFrom;
-    private String locationTo;
+    private String locationfrom;
+    private String locationto;
 
     private String status;
 

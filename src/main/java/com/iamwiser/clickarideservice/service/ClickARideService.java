@@ -25,14 +25,52 @@ public class ClickARideService {
     @Autowired
     RideRequestRepo rideRequestRepo;
 
+    public String cancelRequestRider(RequestRiderDTO dto) {
+        String cancel = "";
+        RequestRiderDTO requestRiderDTO = new RequestRiderDTO();
+        RideRequest rideRequest = rideRequestRepo.findOneByPassengerActiveRequest(dto.getRequestor());
+        if (rideRequest != null) {
+            rideRequest.setStatus("CANCEL");
+            rideRequestRepo.save(rideRequest);
+            cancel = "OK";
+        }
+        return cancel;
+    }
+
+    public String completeAcceptRide(RequestRiderDTO dto) {
+        String complete = "";
+        RequestRiderDTO requestRiderDTO = new RequestRiderDTO();
+        RideRequest rideRequest = rideRequestRepo.findOneByPassengerActiveRequest(dto.getRequestor());
+        if (rideRequest != null) {
+            rideRequest.setStatus("COMPLETE");
+            rideRequestRepo.save(rideRequest);
+            complete = "OK";
+        }
+        return complete;
+    }
+
     public RequestRiderDTO requestRider(RequestRiderDTO dto) {
         RequestRiderDTO requestRiderDTO = new RequestRiderDTO();
 //        save a RideRequest record for a passenger
         Passenger pass = passengerRepo.findOneByUserName(dto.getRequestor());
-        RideRequest rideRequest = rideRequestRepo.findOneByPassenger(pass);
+        RideRequest rideRequest = rideRequestRepo.findOneByPassengerActiveRequest(dto.getRequestor());
         if (rideRequest == null) {
             rideRequest = new RideRequest();
             rideRequest.setPassenger(pass);
+            rideRequest.setStatus("NEW");
+            rideRequestRepo.save(rideRequest);
+        }
+        return requestRiderDTO;
+    }
+    public RequestRiderDTO acceptRide(RequestRiderDTO dto) {
+        RequestRiderDTO requestRiderDTO = new RequestRiderDTO();
+//        update a RideRequest record for a passenger
+        Passenger pass = passengerRepo.findOneByUserName(dto.getRequestor());
+        RideRequest rideRequest = rideRequestRepo.findOneByPassengerActiveRequest(dto.getRequestor());
+        if (rideRequest != null) {
+            Driver driver = driverRepo.findOneByUserName(dto.getAcceptedBy());
+            rideRequest.setDriver(driver);
+            rideRequest.setStatus("ACCEPT");
             rideRequestRepo.save(rideRequest);
         }
         return requestRiderDTO;
@@ -43,10 +81,10 @@ public class ClickARideService {
         Passenger pass = passengerRepo.findOneByUserName(user.getUserName());
         if (pass == null) {
             pass = new Passenger();
-            pass.setUserName(user.getUserName());
+            pass.setUsername(user.getUserName());
             pass.setPassword(user.getPassword());
-            pass.setFirstName(user.getFirstName());
-            pass.setLastName(user.getLastName());
+            pass.setFirstname(user.getFirstName());
+            pass.setLastname(user.getLastName());
             passengerRepo.save(pass);
             retString = "OK";
         }
@@ -55,29 +93,15 @@ public class ClickARideService {
         }
         return  retString;
     }
-
-    public RequestRiderDTO acceptRide(RequestRiderDTO dto) {
-        RequestRiderDTO requestRiderDTO = new RequestRiderDTO();
-//        update a RideRequest record for a passenger
-        Passenger pass = passengerRepo.findOneByUserName(dto.getRequestor());
-        RideRequest rideRequest = rideRequestRepo.findOneByPassenger(pass);
-        if (rideRequest != null) {
-            Driver driver = driverRepo.findOneByUserName(dto.getAcceptedBy());
-            rideRequest.setDriver(driver);
-            rideRequestRepo.save(rideRequest);
-        }
-        return requestRiderDTO;
-    }
-
     public String registerDriver(UserDTO user) {
         String retString = "";
         Driver driver = driverRepo.findOneByUserName(user.getUserName());
         if (driver == null) {
             driver = new Driver();
-            driver.setUserName(user.getUserName());
+            driver.setUsername(user.getUserName());
             driver.setPassword(user.getPassword());
-            driver.setFirstName(user.getFirstName());
-            driver.setLastName(user.getLastName());
+            driver.setFirstname(user.getFirstName());
+            driver.setLastname(user.getLastName());
             driverRepo.save(driver);
             retString = "OK";
         }
