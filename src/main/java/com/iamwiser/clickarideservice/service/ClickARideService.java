@@ -76,8 +76,7 @@ public class ClickARideService {
         return requestRiderDTO;
     }
 
-    public String registerPassenger(UserDTO user) {
-        String retString = "";
+    public UserDTO registerPassenger(UserDTO user) {
         Passenger pass = passengerRepo.findOneByUserName(user.getUserName());
         if (pass == null) {
             pass = new Passenger();
@@ -86,12 +85,9 @@ public class ClickARideService {
             pass.setFirstname(user.getFirstName());
             pass.setLastname(user.getLastName());
             passengerRepo.save(pass);
-            retString = "OK";
+            user.setId(pass.getId());
         }
-        else {
-            retString = "User exists";
-        }
-        return  retString;
+        return user;
     }
     public String registerDriver(UserDTO user) {
         String retString = "";

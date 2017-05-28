@@ -36,9 +36,9 @@ public class PassengerController {
             produces = { "application/json" },
             consumes = { "application/json" },
             method = RequestMethod.POST)
-    public ResponseEntity<String> registerPassenger(@RequestBody UserDTO user) {
-        String ret = service.registerPassenger(user);
-        return new ResponseEntity<>(ret, HttpStatus.OK);
+    public ResponseEntity<UserDTO> registerPassenger(@RequestBody UserDTO user) {
+        user = service.registerPassenger(user);
+        return new ResponseEntity<>(user, null, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/cancelRequestRider",
