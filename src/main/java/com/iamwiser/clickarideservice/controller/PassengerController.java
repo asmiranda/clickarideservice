@@ -23,7 +23,7 @@ public class PassengerController {
     @Autowired
     ClickARideService service;
 
-    @RequestMapping(value = "/requestRider",
+    @RequestMapping(value = "/requestRide",
             produces = { "application/json" },
             consumes = { "application/json" },
             method = RequestMethod.POST)

@@ -53,6 +53,13 @@ public class ClickARideService {
         RequestRiderDTO requestRiderDTO = new RequestRiderDTO();
 //        save a RideRequest record for a passenger
         Passenger pass = passengerRepo.findOneByUserName(dto.getRequestor());
+        if (pass == null) {
+//            create pass
+            UserDTO user = new UserDTO();
+            user.setUserName(dto.getRequestor());
+            registerPassenger(user);
+            pass = passengerRepo.findOneByUserName(dto.getRequestor());
+        }
         RideRequest rideRequest = rideRequestRepo.findOneByPassengerActiveRequest(dto.getRequestor());
         if (rideRequest == null) {
             rideRequest = new RideRequest();
