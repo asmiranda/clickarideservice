@@ -3,6 +3,7 @@ package com.iamwiser.clickarideservice.service;
 import com.iamwiser.clickarideservice.domain.Driver;
 import com.iamwiser.clickarideservice.domain.Passenger;
 import com.iamwiser.clickarideservice.domain.RideRequest;
+import com.iamwiser.clickarideservice.dto.LastStatusDTO;
 import com.iamwiser.clickarideservice.dto.RequestRiderDTO;
 import com.iamwiser.clickarideservice.dto.UserDTO;
 import com.iamwiser.clickarideservice.repo.DriverRepo;
@@ -36,7 +37,6 @@ public class ClickARideService {
         }
         return cancel;
     }
-
     public String completeAcceptRide(RequestRiderDTO dto) {
         String complete = "";
         RequestRiderDTO requestRiderDTO = new RequestRiderDTO();
@@ -64,7 +64,7 @@ public class ClickARideService {
         if (rideRequest == null) {
             rideRequest = new RideRequest();
             rideRequest.setPassenger(pass);
-            rideRequest.setStatus("NEW");
+            rideRequest.setStatus("Requested");
             rideRequestRepo.save(rideRequest);
         }
         return requestRiderDTO;
@@ -112,5 +112,37 @@ public class ClickARideService {
             retString = "User exists";
         }
         return  retString;
+    }
+
+    public LastStatusDTO getPassengerLastStatus(LastStatusDTO dto) {
+        Passenger pass = passengerRepo.findOneByUserName(dto.getUsername());
+        if (pass == null) {
+//            create pass
+            UserDTO user = new UserDTO();
+            user.setUserName(dto.getUsername());
+            registerPassenger(user);
+            pass = passengerRepo.findOneByUserName(dto.getUsername());
+        }
+        RideRequest rideRequest = rideRequestRepo.findLastOneByPassengerActiveRequest(dto.getUsername());
+        if (rideRequest != null) {
+            dto.setStatus(rideRequest.getStatus());
+        }
+        return dto;
+    }
+
+    public LastStatusDTO getDriverLastStatus(LastStatusDTO dto) {
+        Driver pass = driverRepo.findOneByUserName(dto.getUsername());
+        if (pass == null) {
+//            create pass
+            UserDTO user = new UserDTO();
+            user.setUserName(dto.getUsername());
+            registerPassenger(user);
+            pass = driverRepo.findOneByUserName(dto.getUsername());
+        }
+        RideRequest rideRequest = rideRequestRepo.findLastOneByDriverActiveRequest(dto.getUsername());
+        if (rideRequest != null) {
+            dto.setStatus(rideRequest.getStatus());
+        }
+        return dto;
     }
 }

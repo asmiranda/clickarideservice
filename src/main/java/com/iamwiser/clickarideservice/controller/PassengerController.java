@@ -1,6 +1,7 @@
 package com.iamwiser.clickarideservice.controller;
 
 import com.iamwiser.clickarideservice.domain.Passenger;
+import com.iamwiser.clickarideservice.dto.LastStatusDTO;
 import com.iamwiser.clickarideservice.dto.RequestRiderDTO;
 import com.iamwiser.clickarideservice.dto.UserDTO;
 import com.iamwiser.clickarideservice.service.ClickARideService;
@@ -47,6 +48,15 @@ public class PassengerController {
             method = RequestMethod.POST)
     public ResponseEntity<String> cancelRequestRider(@RequestBody RequestRiderDTO dto) {
         String ret = service.cancelRequestRider(dto);
+        return new ResponseEntity<>(ret, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/getPassengerLastStatus",
+            produces = { "application/json" },
+            consumes = { "application/json" },
+            method = RequestMethod.POST)
+    public ResponseEntity<LastStatusDTO> getPassengerLastStatus(@RequestBody LastStatusDTO dto) {
+        LastStatusDTO ret = service.getPassengerLastStatus(dto);
         return new ResponseEntity<>(ret, HttpStatus.OK);
     }
 }
