@@ -15,9 +15,15 @@ public interface RideRequestRepo extends JpaRepository<RideRequest, Long> {
     @Query("select f from RideRequest f where f.passenger.username like %?1% and f.status not in ('CANCEL', 'COMPLETE')")
     RideRequest findOneByPassengerActiveRequest(String passenger);
 
+    @Query("select f from RideRequest f where f.status = 'Requested'")
+    RideRequest findNewRequest();
+
     @Query("select f from RideRequest f where f.passenger.username like %?1% order by f.id desc")
     RideRequest findLastOneByPassengerActiveRequest(String passenger);
 
     @Query("select f from RideRequest f where f.driver.username like %?1% order by f.id desc")
     RideRequest findLastOneByDriverActiveRequest(String passenger);
+
+    @Query("select f from RideRequest f where f.driver.username like %?1% and f.status = 'CANCEL' order by f.id desc")
+    RideRequest findLastDriverCancelledRequest(String username);
 }

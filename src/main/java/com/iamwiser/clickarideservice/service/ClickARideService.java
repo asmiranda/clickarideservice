@@ -50,7 +50,6 @@ public class ClickARideService {
     }
 
     public RequestRiderDTO requestRider(RequestRiderDTO dto) {
-        RequestRiderDTO requestRiderDTO = new RequestRiderDTO();
 //        save a RideRequest record for a passenger
         Passenger pass = passengerRepo.findOneByUserName(dto.getRequestor());
         if (pass == null) {
@@ -67,10 +66,9 @@ public class ClickARideService {
             rideRequest.setStatus("Requested");
             rideRequestRepo.save(rideRequest);
         }
-        return requestRiderDTO;
+        return dto;
     }
     public RequestRiderDTO acceptRide(RequestRiderDTO dto) {
-        RequestRiderDTO requestRiderDTO = new RequestRiderDTO();
 //        update a RideRequest record for a passenger
         Passenger pass = passengerRepo.findOneByUserName(dto.getRequestor());
         RideRequest rideRequest = rideRequestRepo.findOneByPassengerActiveRequest(dto.getRequestor());
@@ -80,7 +78,7 @@ public class ClickARideService {
             rideRequest.setStatus("ACCEPT");
             rideRequestRepo.save(rideRequest);
         }
-        return requestRiderDTO;
+        return dto;
     }
 
     public UserDTO registerPassenger(UserDTO user) {
@@ -144,5 +142,32 @@ public class ClickARideService {
             dto.setStatus(rideRequest.getStatus());
         }
         return dto;
+    }
+
+    public RequestRiderDTO checkNewRequest() {
+        RequestRiderDTO requestRiderDTO = new RequestRiderDTO();
+        RideRequest rideRequest = rideRequestRepo.findNewRequest();
+        if (rideRequest != null) {
+            requestRiderDTO.setRequestor(rideRequest.getPassenger().getUsername());
+//            requestRiderDTO.setRequestTime(rideRequest.getTimerequest().toString());
+            requestRiderDTO.setRequestLocationOrigin(rideRequest.getLocationfrom());
+            requestRiderDTO.setRequestLocationDestination(rideRequest.getLocationto());
+        }
+        return requestRiderDTO;
+    }
+
+    public RequestRiderDTO checkCancelledRequest(UserDTO user) {
+        RequestRiderDTO requestRiderDTO = new RequestRiderDTO();
+        Driver driver = driverRepo.findOneByUserName(user.getUserName());
+        if (driver != null) {
+            RideRequest rideRequest = rideRequestRepo.findLastDriverCancelledRequest(user.getUserName());
+            if (rideRequest != null) {
+                requestRiderDTO.setRequestor(rideRequest.getPassenger().getUsername());
+//                requestRiderDTO.setRequestTime(rideRequest.getTimerequest().toString());
+                requestRiderDTO.setRequestLocationOrigin(rideRequest.getLocationfrom());
+                requestRiderDTO.setRequestLocationDestination(rideRequest.getLocationto());
+            }
+        }
+        return requestRiderDTO;
     }
 }

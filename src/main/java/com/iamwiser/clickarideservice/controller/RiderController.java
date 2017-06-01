@@ -55,4 +55,22 @@ public class RiderController {
         LastStatusDTO ret = service.getDriverLastStatus(dto);
         return new ResponseEntity<>(ret, HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/checkNewRequest",
+            produces = { "application/json" },
+            consumes = { "application/json" },
+            method = RequestMethod.POST)
+    public ResponseEntity<RequestRiderDTO> checkNewRequest(@RequestBody UserDTO dto) {
+        RequestRiderDTO ret = service.checkNewRequest();
+        return new ResponseEntity<>(ret, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/checkCancelledRequest",
+            produces = { "application/json" },
+            consumes = { "application/json" },
+            method = RequestMethod.POST)
+    public ResponseEntity<RequestRiderDTO> checkCancelledRequest(@RequestBody UserDTO dto) {
+        RequestRiderDTO ret = service.checkCancelledRequest(dto);
+        return new ResponseEntity<>(ret, HttpStatus.OK);
+    }
 }
