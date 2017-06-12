@@ -25,6 +25,8 @@ public @Data class RideRequest {
     private String locationto;
 
     private String status;
+    private double distance;
+    private double price;
 
     @OneToOne
     private Passenger passenger;

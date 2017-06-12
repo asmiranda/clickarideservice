@@ -17,4 +17,7 @@ public @Data class RequestRiderDTO {
     private String arrivalTime;
     private String arrivalLocationOrigin;
     private String arrivalLocationCurrent;
+
+    private double distance;
+    private double price;
 }

@@ -24,6 +24,15 @@ public class PassengerController {
     @Autowired
     ClickARideService service;
 
+    @RequestMapping(value = "/computePrice",
+            produces = { "application/json" },
+            consumes = { "application/json" },
+            method = RequestMethod.POST)
+    public ResponseEntity<RequestRiderDTO> computePrice(@RequestBody RequestRiderDTO dto) {
+        RequestRiderDTO retDTO = service.computePrice(dto);
+        return new ResponseEntity<>(retDTO, HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/requestRide",
             produces = { "application/json" },
             consumes = { "application/json" },

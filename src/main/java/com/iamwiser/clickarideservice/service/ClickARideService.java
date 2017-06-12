@@ -49,6 +49,12 @@ public class ClickARideService {
         return complete;
     }
 
+    public RequestRiderDTO computePrice(RequestRiderDTO dto) {
+        double price = PriceService.computePrice(dto.getRequestLocationOrigin(), dto.getRequestLocationDestination(), dto.getDistance(), System.currentTimeMillis());
+        dto.setPrice(price);
+        return dto;
+    }
+
     public RequestRiderDTO requestRider(RequestRiderDTO dto) {
 //        save a RideRequest record for a passenger
         Passenger pass = passengerRepo.findOneByUserName(dto.getRequestor());
@@ -64,6 +70,9 @@ public class ClickARideService {
             rideRequest = new RideRequest();
             rideRequest.setPassenger(pass);
             rideRequest.setStatus("Requested");
+            rideRequest.setPrice(dto.getPrice());
+//            rideRequest.setPrice(PriceService.computePrice(dto.getRequestLocationOrigin(), dto.getRequestLocationDestination(), dto.getDistance(), System.currentTimeMillis()));
+            rideRequest.setDistance(dto.getDistance());
             rideRequestRepo.save(rideRequest);
         }
         return dto;
